@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MarkdownPreview from '@/components/MarkdownPreview';
 import ShareDialog from '@/components/ShareDialog';
+import ExportMenu from '@/components/ExportMenu';
+import ThemeToggle from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,8 @@ Write your **markdown** here and see it rendered in real-time.
 - 📝 Live editing with instant preview
 - 🔗 Share documents with a public URL
 - ✨ GitHub Flavored Markdown support
+- 🌙 Dark mode
+- 📤 Export to MD, PDF, DOCX
 
 ## Code Example
 
@@ -36,6 +39,7 @@ const hello = () => {
 | Editor  | ✅ Ready |
 | Preview | ✅ Ready |
 | Sharing | ✅ Ready |
+| Export  | ✅ Ready |
 `;
 
 const Index = () => {
@@ -46,6 +50,34 @@ const Index = () => {
   const [shareOpen, setShareOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
+
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const isSyncingRef = useRef(false);
+
+  const handleEditorScroll = () => {
+    if (isSyncingRef.current) return;
+    const editor = editorRef.current;
+    const preview = previewRef.current;
+    if (!editor || !preview) return;
+
+    isSyncingRef.current = true;
+    const ratio = editor.scrollTop / (editor.scrollHeight - editor.clientHeight || 1);
+    preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
+    requestAnimationFrame(() => { isSyncingRef.current = false; });
+  };
+
+  const handlePreviewScroll = () => {
+    if (isSyncingRef.current) return;
+    const editor = editorRef.current;
+    const preview = previewRef.current;
+    if (!editor || !preview) return;
+
+    isSyncingRef.current = true;
+    const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight || 1);
+    editor.scrollTop = ratio * (editor.scrollHeight - editor.clientHeight);
+    requestAnimationFrame(() => { isSyncingRef.current = false; });
+  };
 
   const saveAndShare = useCallback(async () => {
     setIsSharing(true);
@@ -97,11 +129,12 @@ const Index = () => {
             </div>
             <h1 className="font-display text-xl tracking-tight">MarkView</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={handleNew} className="gap-1.5">
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">New</span>
             </Button>
+            <ExportMenu title={title} content={content} previewRef={previewRef} />
             <Button
               size="sm"
               onClick={() => {
@@ -113,6 +146,7 @@ const Index = () => {
               <Share2 className="w-4 h-4" />
               <span className="hidden sm:inline">Share</span>
             </Button>
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -163,8 +197,10 @@ const Index = () => {
               Editor
             </div>
             <Textarea
+              ref={editorRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
+              onScroll={handleEditorScroll}
               className="flex-1 resize-none font-mono text-sm leading-relaxed bg-card border-border focus-visible:ring-1 focus-visible:ring-primary/30 rounded-lg p-4"
               placeholder="Write your markdown here…"
             />
@@ -176,7 +212,11 @@ const Index = () => {
               <Eye className="w-3 h-3" />
               Preview
             </div>
-            <div className="flex-1 overflow-y-auto bg-card border border-border rounded-lg p-6">
+            <div
+              ref={previewRef}
+              onScroll={handlePreviewScroll}
+              className="flex-1 overflow-y-auto bg-card border border-border rounded-lg p-6"
+            >
               <MarkdownPreview content={content} />
             </div>
           </div>
