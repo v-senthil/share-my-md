@@ -4,6 +4,7 @@ import MarkdownPreview from '@/components/MarkdownPreview';
 import ShareDialog from '@/components/ShareDialog';
 import ExportMenu from '@/components/ExportMenu';
 import ThemeToggle from '@/components/ThemeToggle';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -189,9 +190,9 @@ const Index = () => {
 
       {/* Editor & Preview */}
       <div className="flex-1 w-full px-4 sm:px-6 py-4">
-        <div className="grid md:grid-cols-2 gap-4 h-[calc(100vh-180px)]">
-          {/* Editor */}
-          <div className={`flex flex-col ${activeTab === 'preview' ? 'hidden md:flex' : ''}`}>
+        {/* Mobile tabs */}
+        <div className="md:hidden h-[calc(100vh-180px)]">
+          <div className={`flex flex-col h-full ${activeTab === 'preview' ? 'hidden' : ''}`}>
             <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
               <Edit3 className="w-3 h-3" />
               Editor
@@ -205,9 +206,7 @@ const Index = () => {
               placeholder="Write your markdown here…"
             />
           </div>
-
-          {/* Preview */}
-          <div className={`flex flex-col ${activeTab === 'edit' ? 'hidden md:flex' : ''}`}>
+          <div className={`flex flex-col h-full ${activeTab === 'edit' ? 'hidden' : ''}`}>
             <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
               <Eye className="w-3 h-3" />
               Preview
@@ -220,6 +219,44 @@ const Index = () => {
               <MarkdownPreview content={content} />
             </div>
           </div>
+        </div>
+
+        {/* Desktop resizable panels */}
+        <div className="hidden md:block h-[calc(100vh-180px)]">
+          <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg">
+            <ResizablePanel defaultSize={50} minSize={15}>
+              <div className="flex flex-col h-full pr-2">
+                <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                  <Edit3 className="w-3 h-3" />
+                  Editor
+                </div>
+                <Textarea
+                  ref={editorRef}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  onScroll={handleEditorScroll}
+                  className="flex-1 resize-none font-mono text-sm leading-relaxed bg-card border-border focus-visible:ring-1 focus-visible:ring-primary/30 rounded-lg p-4"
+                  placeholder="Write your markdown here…"
+                />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={50} minSize={15}>
+              <div className="flex flex-col h-full pl-2">
+                <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                  <Eye className="w-3 h-3" />
+                  Preview
+                </div>
+                <div
+                  ref={previewRef}
+                  onScroll={handlePreviewScroll}
+                  className="flex-1 overflow-y-auto bg-card border border-border rounded-lg p-6"
+                >
+                  <MarkdownPreview content={content} />
+                </div>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </div>
 
