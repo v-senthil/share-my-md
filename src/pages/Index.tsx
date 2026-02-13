@@ -224,7 +224,7 @@ const Index = () => {
         {/* Desktop resizable panels */}
         <div className="hidden md:block h-[calc(100vh-180px)]">
           <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg">
-            <ResizablePanel defaultSize={50} minSize={15}>
+            <ResizablePanel defaultSize={50} minSize={0} collapsible collapsedSize={0}>
               <div className="flex flex-col h-full pr-2">
                 <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   <Edit3 className="w-3 h-3" />
@@ -241,7 +241,7 @@ const Index = () => {
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={50} minSize={15}>
+            <ResizablePanel defaultSize={50} minSize={0} collapsible collapsedSize={0}>
               <div className="flex flex-col h-full pl-2">
                 <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   <Eye className="w-3 h-3" />
