@@ -14,7 +14,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/share-my-md">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/view/:shareId" element={<SharedView />} />
