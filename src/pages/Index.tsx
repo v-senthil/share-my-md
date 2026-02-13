@@ -101,7 +101,8 @@ const Index = () => {
         setDocumentId(data.id);
       }
 
-      const url = `${window.location.origin}/view/${shareId}`;
+      const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+      const url = `${window.location.origin}${base}/view/${shareId}`;
       setShareUrl(url);
       toast.success('Share link generated!');
     } catch (err) {
