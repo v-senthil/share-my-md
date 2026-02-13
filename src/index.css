@@ -183,6 +183,8 @@
 
 .prose table {
   @apply w-full border-collapse my-4;
+  display: block;
+  overflow-x: auto;
 }
 
 .prose th, .prose td {

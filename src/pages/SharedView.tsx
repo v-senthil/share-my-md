@@ -58,7 +58,7 @@ const SharedView = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <FileText className="w-4 h-4 text-primary-foreground" />
@@ -74,7 +74,7 @@ const SharedView = () => {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
         <h1 className="font-display text-3xl mb-2">{document.title}</h1>
         <p className="text-sm text-muted-foreground mb-8">
           Shared on {new Date(document.created_at).toLocaleDateString('en-US', {
@@ -83,7 +83,7 @@ const SharedView = () => {
             day: 'numeric',
           })}
         </p>
-        <div className="bg-card border border-border rounded-lg p-6 sm:p-8">
+        <div className="bg-card border border-border rounded-lg p-6 sm:p-8 overflow-x-auto">
           <MarkdownPreview content={document.content} />
         </div>
       </main>
