@@ -152,7 +152,7 @@ const Index = () => {
       </header>
 
       {/* Title */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4 pb-2">
+      <div className="w-full px-4 sm:px-6 pt-4 pb-2">
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -188,7 +188,7 @@ const Index = () => {
       </div>
 
       {/* Editor & Preview */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-4">
+      <div className="flex-1 w-full px-4 sm:px-6 py-4">
         <div className="grid md:grid-cols-2 gap-4 h-[calc(100vh-180px)]">
           {/* Editor */}
           <div className={`flex flex-col ${activeTab === 'preview' ? 'hidden md:flex' : ''}`}>
